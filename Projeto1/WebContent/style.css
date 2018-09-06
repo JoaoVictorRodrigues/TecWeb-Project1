@@ -1,0 +1,152 @@
+body {
+	background-color: #0080c0;
+}
+h1 {
+	color: darkblue;
+}
+
+
+.navbar {
+	top: 0;
+	right: 0;
+	left: 0;
+	height: 10%;
+	overflow: hidden;
+	position: fixed;
+	width: 100%;
+	background-color: #bbcbd9;
+	float: none;
+	
+}
+.navbar table{
+	width: 100%;
+	height: 100%;
+	align-content: center;
+	text-align: center;
+}
+.navbar textarea {
+	width: 98%;
+	height: 98%;
+}
+.navbar button {
+	width: 100%;
+	height: 100%;
+	font-size: 100%;
+	font-family: cursive;	
+}
+
+
+.msgIn {
+	position: absolute;
+	top: 0;
+	padding-left: 5px;
+	background-color: lightgrey;
+	width: 50%;
+	
+}
+
+.navbar div {
+	top : 0;
+	float: left;
+	width: 80%;	
+}
+.navbar a {
+	top: 0;
+	right: 0;
+	float: right;
+	width: 10%;
+	height: 100%;
+	background-color: red;
+	padding: 14px 16px;
+	display: block;
+}
+
+
+#spacer {
+	height: 50px;
+}
+
+
+
+
+.listaNotas {
+	width: 98%; 
+	align-self: center;
+	margin-left: 1%;
+	padding-top: 2%;
+	background-color: lightgrey;
+}
+.listaNotas h2 {
+	text-align: center;
+	
+	
+}
+.listaNotas button{
+	width: 100%;
+	align-self: center;
+}
+
+.noteTagbar {
+	width: 50%;
+}
+.tagsTagbar {
+	width: 30%;
+}
+.editTagbar {
+	width: 10%;
+}
+
+
+#overlayDelete {
+	position: fixed;
+	display: none;
+	background-color: rgba(0,0,0,0.5);
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 2;
+	width: 100%;
+	height: 100%;
+	color: white;
+}
+
+#overlayEdit {
+	position: fixed;
+	display: none;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,0.5);
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 2;
+	color: white;
+}
+#overlayEdit td {
+	align-content: center;
+	text-align: center;
+	width: 40%;
+}
+#overlayEdit button {
+	background-color: darkgrey;
+}
+
+#textOverDel {
+	position: absolute;
+	top: 50%;
+	left: 40%;
+	border: thin;
+}
+
+#textOverAlt {
+	position: absolute;
+	top: 50%;
+	left: 40%;	
+}
+
+#textOverAlt textarea {
+	
+	width: 80%;
+}
