@@ -4,7 +4,7 @@
 <html>
 <head>
 <link href="style.css" rel="stylesheet" type="text/css">
-<script type="text/javascript" src="jscript.js"></script>
+<script type="text/javascript" src="javascript.js"></script>
 <meta charset="ISO-8859-1">
 <title>Get Notes System</title>
 </head>
@@ -12,18 +12,19 @@
 	<%@ page import="java.util.*,br.tech.*"%>
 
 	<div class="navbar">
-		<table border="1px">
-			<tr>
-				<td><textarea id="msgIn" name="msgIn"
+		<form method="POST"
+			action=" ${pageContext.request.contextPath}/adiciona">
+			<table border="1px">
+				<tr>
+					<td><textarea id="msgIn" name="msgIn" type="text"
 						placeholder="Adicione sua nota aqui...." cols="" rows=""></textarea></td>
-				<td><textarea id="tagIn" name="tagIn"
-						placeholder="Tags (usar o '#' no comeco de cada tag e separar as tags com espaço)"
+					<td><textarea id="tagIn" name="tagIn"
+						placeholder="Tags (Usar espaço entre cada tag)"
 						cols="" rows=""></textarea></td>
-				<td>
-					<button autofocus="autofocus">Adicicionar mensagem</button>
-				</td>
-			</tr>
-		</table>
+					<td><button type="submit">Adicionar</button></td>
+				</tr>
+			</table>
+		</form>
 	</div>
 
 
@@ -44,13 +45,16 @@
 				for (String str : mensagem.getTag()) {
 					asd += str + "\n";
 				}
+				String msgstr = mensagem.getMens();
+				int id = mensagem.getId();
+								
 		%>
 		<tr>
 			<td><%=mensagem.getId()%></td>
 			<td><%=mensagem.getMens()%></td>
 			<td><%=asd%></td>
-			<td><button onClick="onEdit()">Edit</button></td>
-			<td><button onclick="onDel(<%=mensagem.getId()%>)">Delete</button></td>
+			<td><button onClick="onEdit(<%=id%>)">Edit</button></td>
+			<td><button onclick="onDel(<%=mensagem.getId() %>)">Delete</button></td>
 		</tr>
 		<%
 			}
@@ -60,34 +64,51 @@
 
 	<div id="overlayEdit">
 		<div id="textOverAlt">
-			<form action="altera">
+
+			<form action=" ${pageContext.request.contextPath}/altera" method="POST">
 				<table>
+
 					<tr>
 						<td>Tem certeza que deseja alterar essa nota?</td>
 					</tr>
 					<tr>
+
 						<td>Notas:</td>
-						<td><input type="text" name="msgEdit"></td>
+						<td><input type="text" name="msgEdit" id="msgEdit">
+						<input type="hidden" name="idAlterar" id="idAlterar"></td>
 					</tr>
 					<tr>
 						<td>Tags:</td>
-						<td><input type="text" name="tagEdit"></td>
+						<td><input type="text" name="tagEdit" id="tagEdit"></td>
 					</tr>
 					<tr>
 						<td><input type="submit"></td>
-						<td><button onclick="offEdit()">Cancela</button></td>
+
 					</tr>
+
 				</table>
+
 			</form>
+			<table>
+				<tr>
+					<td><button onclick="offEdit()">Cancela</button></td>
+				</tr>
+			</table>
+
+
 		</div>
 	</div>
 	<div id="overlayDelete">
 
 		<table id="textOverDel">
-				<tr>
+			<tr>
 				<td>Tem certeza que desejas apagar?</td>
 				<td>
-					<button>Apagar</button>
+					<form method="POST"
+						action="${pageContext.request.contextPath}/remove">
+						<input type="hidden" name="idApagar" id="qualApagar"> <input
+							type="submit" value="Apagar">
+					</form>
 				</td>
 				<td>
 					<button onclick="offDel()">Cancela</button>

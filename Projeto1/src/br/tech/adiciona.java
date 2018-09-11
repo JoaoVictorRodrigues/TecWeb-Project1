@@ -1,6 +1,13 @@
 package br.tech;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.lang.ProcessBuilder.Redirect;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,7 +34,6 @@ public class adiciona extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
@@ -35,7 +41,15 @@ public class adiciona extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		DAO dao = new DAO();
+		String msg = request.getParameter("msgIn");
+		String tags = request.getParameter("tagIn");
+		List<String> list = new ArrayList<String>(Arrays.asList(tags.split(" ")));
+		Mensagem msgs = new Mensagem();
+		msgs.setMens(msg);
+		msgs.setTag(list);
+		dao.adiciona(msgs);
+		dao.close();
+		response.sendRedirect("Testejsp.jsp");
 	}
-
 }
