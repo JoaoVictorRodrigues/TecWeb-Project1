@@ -1,5 +1,6 @@
 package br.tech;
 
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,6 +11,7 @@ import java.util.List;
 
 public class DAO {
 	private Connection connection = null;
+	private int nextId;
 	
 	public DAO() {
 		try {
@@ -98,10 +100,36 @@ public class DAO {
 	}
 	
 	public void adiciona(Mensagem mens) {
-		String sql = "INSERT INTO mensagens(mensagem) VALUES(?)";
-		String sql2 = "INSERT INTO tag(mensagem_id,tag) VALUES(?,?)";
+		String sql = "INSERT INTO mensagens(Id_mensagem,mensagem) VALUES(?,?)";
+		String sql2 = "INSERT INTO tag(mensagem_id,tags) VALUES(?,?)";
+		String sql3 = "SELECT * FROM mensagens";
+		ResultSet rs = null;
 		PreparedStatement stmt = null;
 		PreparedStatement stmt2 = null;
+		PreparedStatement stmt3 = null;
+		
+		try {
+			stmt3 = connection.prepareStatement(sql3);
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		try {
+			rs = stmt3.executeQuery();
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		try {
+			while (rs.next()) {
+				nextId = rs.getInt("Id_mensagem")+1;
+				System.out.println("LastId: "+nextId);
+			}
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
 		try {
 			stmt = connection.prepareStatement(sql);
 		} catch (SQLException e) {
@@ -115,14 +143,20 @@ public class DAO {
 			e1.printStackTrace();
 		}
 		try {
-			stmt.setString(1, mens.getMens());
+			stmt.setInt(1, nextId);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		try {
+			stmt.setString(2, mens.getMens());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		for(String str : mens.getTag()) {
+			System.out.println("Passou por: "+str);
 			try {
-				stmt2.setInt(1, mens.getId());
+				stmt2.setInt(1, nextId);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -158,10 +192,11 @@ public class DAO {
 	}
 	
 	public void altera(Mensagem msg) {
-		String sql = "UPDATE mensagens SET mensagem=? WHERE id=?";
-		String sql2 = "UPDATE tag SET tags=? WHERE id=?";
+		String sql = "UPDATE mensagens SET mensagem=? WHERE Id_mensagem=?";
+		String sql2 = "INSERT INTO tag(mensagem_id,tags) VALUES(?,?)";
 		PreparedStatement stmt = null;
 		PreparedStatement stmt2 = null;
+		PreparedStatement stmt3 = null;
 		
 		try {
 			stmt = connection.prepareStatement(sql);
@@ -171,12 +206,22 @@ public class DAO {
 		}
 		try {
 			stmt2 = connection.prepareStatement(sql2);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			stmt3 = connection.prepareStatement("DELETE FROM tag WHERE mensagem_id=?");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}		
+		try {
+			stmt3.setInt(1, msg.getId());
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
 		}
-		
-		
 		try {
 			stmt.setString(1, msg.getMens());
 		} catch (SQLException e) {
@@ -189,22 +234,39 @@ public class DAO {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		try {
+			stmt3.execute();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		List<String> strList = msg.getTag();
-		List<Integer> intList = msg.getTag_id();
 		for (int i = 0;i< msg.getTag().size();i++) {
 			try {
-				stmt2.setString(1, strList.get(i));
+				stmt2.setString(2, strList.get(i));
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			try {
-				stmt2.setInt(2, intList.get(i));
+				stmt2.setInt(1, msg.getId());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+			try {
+				stmt2.execute();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		try {
+			stmt.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -213,7 +275,7 @@ public class DAO {
 		PreparedStatement stmt2 = null;
 		
 		try {
-			stmt = connection.prepareStatement("DELETE FROM mensagem WHERE id=?");
+			stmt = connection.prepareStatement("DELETE FROM mensagens WHERE Id_mensagem=?");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
