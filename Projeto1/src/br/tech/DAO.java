@@ -12,7 +12,7 @@ import java.util.List;
 public class DAO {
 	private Connection connection = null;
 	private int nextId;
-	
+
 	public DAO() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -20,16 +20,17 @@ public class DAO {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		try {
-			connection = DriverManager.getConnection("jdbc:mysql://localhost/projeto1?useTimezone=true&serverTimezone=UTC", "root", "googleex");
+			connection = DriverManager.getConnection(
+					"jdbc:mysql://localhost/projeto1?useTimezone=true&serverTimezone=UTC", "root", "googleex");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public List<Mensagem> getLista() {
 		List<Mensagem> mensagens = new ArrayList<Mensagem>();
 		PreparedStatement stmt = null;
@@ -40,41 +41,41 @@ public class DAO {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 		ResultSet rs = null;
 		ResultSet rs2 = null;
-		
+
 		try {
 			rs = stmt.executeQuery();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		try {
 			while (rs.next()) {
 				Mensagem message = new Mensagem();
 				message.setId(rs.getInt("Id_mensagem"));
 				message.setMens(rs.getString("mensagem"));
-				stmt2 = connection.prepareStatement("SELECT * FROM tag WHERE mensagem_id = "+rs.getInt("Id_mensagem"));
+				stmt2 = connection
+						.prepareStatement("SELECT * FROM tag WHERE mensagem_id = " + rs.getInt("Id_mensagem"));
 				rs2 = stmt2.executeQuery();
 				List<String> tagis = new ArrayList<String>();
 				List<Integer> idtagis = new ArrayList<Integer>();
-				while(rs2.next()) {
-					tagis.add(rs2.getString("tags"));	
+				while (rs2.next()) {
+					tagis.add(rs2.getString("tags"));
 					idtagis.add(rs2.getInt("mensagem_id"));
 				}
 				message.setTag(tagis);
 				message.setTag_id(idtagis);
-				
+
 				mensagens.add(message);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		try {
 			rs.close();
 		} catch (SQLException e) {
@@ -89,7 +90,7 @@ public class DAO {
 		}
 		return mensagens;
 	}
-	
+
 	public void close() {
 		try {
 			connection.close();
@@ -98,7 +99,7 @@ public class DAO {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void adiciona(Mensagem mens) {
 		String sql = "INSERT INTO mensagens(Id_mensagem,mensagem) VALUES(?,?)";
 		String sql2 = "INSERT INTO tag(mensagem_id,tags) VALUES(?,?)";
@@ -107,7 +108,7 @@ public class DAO {
 		PreparedStatement stmt = null;
 		PreparedStatement stmt2 = null;
 		PreparedStatement stmt3 = null;
-		
+
 		try {
 			stmt3 = connection.prepareStatement(sql3);
 		} catch (SQLException e2) {
@@ -122,14 +123,14 @@ public class DAO {
 		}
 		try {
 			while (rs.next()) {
-				nextId = rs.getInt("Id_mensagem")+1;
-				System.out.println("LastId: "+nextId);
+				nextId = rs.getInt("Id_mensagem") + 1;
+				System.out.println("LastId: " + nextId);
 			}
 		} catch (SQLException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		
+
 		try {
 			stmt = connection.prepareStatement(sql);
 		} catch (SQLException e) {
@@ -153,8 +154,8 @@ public class DAO {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		for(String str : mens.getTag()) {
-			System.out.println("Passou por: "+str);
+		for (String str : mens.getTag()) {
+			System.out.println("Passou por: " + str);
 			try {
 				stmt2.setInt(1, nextId);
 			} catch (SQLException e) {
@@ -173,7 +174,7 @@ public class DAO {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
 		try {
 			stmt.execute();
@@ -181,7 +182,7 @@ public class DAO {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		try {
 			stmt2.close();
 			stmt.close();
@@ -190,14 +191,14 @@ public class DAO {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void altera(Mensagem msg) {
 		String sql = "UPDATE mensagens SET mensagem=? WHERE Id_mensagem=?";
 		String sql2 = "INSERT INTO tag(mensagem_id,tags) VALUES(?,?)";
 		PreparedStatement stmt = null;
 		PreparedStatement stmt2 = null;
 		PreparedStatement stmt3 = null;
-		
+
 		try {
 			stmt = connection.prepareStatement(sql);
 		} catch (SQLException e) {
@@ -215,7 +216,7 @@ public class DAO {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}
 		try {
 			stmt3.setInt(1, msg.getId());
 		} catch (SQLException e2) {
@@ -240,9 +241,9 @@ public class DAO {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		List<String> strList = msg.getTag();
-		for (int i = 0;i< msg.getTag().size();i++) {
+		for (int i = 0; i < msg.getTag().size(); i++) {
 			try {
 				stmt2.setString(2, strList.get(i));
 			} catch (SQLException e) {
@@ -273,7 +274,7 @@ public class DAO {
 	public void exclui(Integer id) {
 		PreparedStatement stmt = null;
 		PreparedStatement stmt2 = null;
-		
+
 		try {
 			stmt = connection.prepareStatement("DELETE FROM mensagens WHERE Id_mensagem=?");
 		} catch (SQLException e) {
@@ -322,8 +323,116 @@ public class DAO {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
-}
+	public List<Integer> getBuscaId(String tagBusca) {
+		List<Integer> listaId = new ArrayList<>();
+		String sql = "SELECT mensagem_id FROM tag WHERE tag.tags = ?";
+		ResultSet rs = null;
+		PreparedStatement stmt = null;
+		try {
+			stmt = connection.prepareStatement(sql);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+
+			e.printStackTrace();
+		}
+		try {
+			stmt.setString(1, tagBusca);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			rs = stmt.executeQuery();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			while (rs.next()) {
+				listaId.add(rs.getInt("mensagem_id"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return listaId;
+
+	}
+
 	
+
+	public List<Mensagem> getListaBusca(List<Integer> listaId) {
+		List<Mensagem> mensagens = new ArrayList<Mensagem>();		
+		ResultSet rs = null;
+		ResultSet rs2 = null;
+
+		for (Integer id : listaId) {
+			PreparedStatement stmt = null;
+			PreparedStatement stmt2 = null;
+			try {
+				stmt = connection.prepareStatement("SELECT * FROM mensagens WHERE mensagens.Id_mensagem = ?");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				stmt.setInt(1, id);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				rs = stmt.executeQuery();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+				while (rs.next()) {
+					Mensagem message = new Mensagem();
+					message.setId(rs.getInt("Id_mensagem"));
+					message.setMens(rs.getString("mensagem"));
+					try {
+					stmt2 = connection
+							.prepareStatement("SELECT * FROM tag WHERE mensagem_id = " + rs.getInt("Id_mensagem"));
+					rs2 = stmt2.executeQuery();
+					} catch (Exception e) {
+						// TODO: handle exception
+
+					}
+					
+					List<String> tagis = new ArrayList<String>();
+					List<Integer> idtagis = new ArrayList<Integer>();
+					while (rs2.next()) {
+						tagis.add(rs2.getString("tags"));
+						idtagis.add(rs2.getInt("mensagem_id"));
+					}
+					message.setTag(tagis);
+					message.setTag_id(idtagis);
+
+					mensagens.add(message);
+
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+
+		}
+		try {
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			//System.out.println("ué");
+			e.printStackTrace();
+		}
+		return mensagens;
+
+	}
+}

@@ -1,15 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+    pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
 <link href="style.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="javascript.js"></script>
-<meta charset="ISO-8859-1">
-<title>Get Notes System</title>
 </head>
 <body>
-	<%@ page import="java.util.*,br.tech.*"%>
+<%@ page import="java.util.*,br.tech.*"%>
 
 	<div class="navbar">
 		<form method="POST"	action=" ${pageContext.request.contextPath}/adiciona">
@@ -45,7 +45,8 @@
 			<td class="editTagbar"><h2>Deletar</h2></td>
 		</tr>
 		<%	DAO dao = new DAO();
-			List<Mensagem> messages = dao.getLista();
+			List<Integer> listaId = (List<Integer>) request.getAttribute("result");
+			List<Mensagem> messages = dao.getListaBusca(listaId);
 			for (Mensagem mensagem : messages) {
 				String asd = "";
 				for (String str : mensagem.getTag()) {
@@ -122,10 +123,6 @@
 			</tr>
 		</table>
 	</div>
-
-
-
-
 
 </body>
 </html>

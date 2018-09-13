@@ -1,8 +1,10 @@
 package br.tech;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,16 +12,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class Deleta
+ * Servlet implementation class BuscaServlet
  */
-@WebServlet("/remove")
-public class Deleta extends HttpServlet {
+@WebServlet("/BuscaServlet")
+public class BuscaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Deleta() {
+    public BuscaServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -29,7 +31,7 @@ public class Deleta extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
 	}
 
 	/**
@@ -38,12 +40,21 @@ public class Deleta extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		DAO dao = new DAO();
-		String delId = request.getParameter("idApagar");
-		dao.exclui(Integer.parseInt(delId));
-
-		dao.close();
-		response.sendRedirect("Testejsp.jsp");
-
+		String tagBusca = request.getParameter("tagBusca");
+		if(tagBusca.equals("")){
+			request.getRequestDispatcher("Testejsp.jsp").forward(request, response);
+		}
+		else {
+			List<Integer> listaId = dao.getBuscaId(tagBusca);
+			List<Integer> listaZero = new ArrayList<>();
+			if(listaId.equals(listaZero)) {
+				request.getRequestDispatcher("Testejsp.jsp").forward(request, response);
+			}
+			else {
+		
+				request.setAttribute("result", listaId);
+				request.getRequestDispatcher("buscaTag.jsp").forward(request, response);	
+			}
+		}
 	}
-
 }
