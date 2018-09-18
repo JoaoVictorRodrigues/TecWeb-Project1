@@ -1,8 +1,13 @@
-function onEdit(id) {
+function onEditID(id) {
     document.getElementById("overlayEdit").style.display = "block";
     document.getElementById("idAlterar").value = id;
+    }
+function onEditMsg(msg) {
+	document.getElementById("msgEdit").value = msg;
+	}
+function onEditTag(tag) {
+	document.getElementById("tagEdit").value = tag;
 }
-
 function offEdit() {
     document.getElementById("overlayEdit").style.display = "none";
     document.getElementById("idAlterar").value = "";

@@ -124,7 +124,6 @@ public class DAO {
 		try {
 			while (rs.next()) {
 				nextId = rs.getInt("Id_mensagem") + 1;
-				System.out.println("LastId: " + nextId);
 			}
 		} catch (SQLException e2) {
 			// TODO Auto-generated catch block
@@ -155,7 +154,6 @@ public class DAO {
 			e.printStackTrace();
 		}
 		for (String str : mens.getTag()) {
-			System.out.println("Passou por: " + str);
 			try {
 				stmt2.setInt(1, nextId);
 			} catch (SQLException e) {
@@ -363,8 +361,6 @@ public class DAO {
 
 	}
 
-	
-
 	public List<Mensagem> getListaBusca(List<Integer> listaId) {
 		List<Mensagem> mensagens = new ArrayList<Mensagem>();		
 		ResultSet rs = null;
@@ -398,8 +394,7 @@ public class DAO {
 					message.setId(rs.getInt("Id_mensagem"));
 					message.setMens(rs.getString("mensagem"));
 					try {
-					stmt2 = connection
-							.prepareStatement("SELECT * FROM tag WHERE mensagem_id = " + rs.getInt("Id_mensagem"));
+					stmt2 = connection.prepareStatement("SELECT * FROM tag WHERE mensagem_id = " + rs.getInt("Id_mensagem"));
 					rs2 = stmt2.executeQuery();
 					} catch (Exception e) {
 						// TODO: handle exception
@@ -434,5 +429,65 @@ public class DAO {
 		}
 		return mensagens;
 
+	}
+
+	public Mensagem getMensagemByID(Integer id) {
+		//Função que utiliza o ID da mensagem para enviar para o EDIT os dados da mensagem e as tags
+		
+		Mensagem mensagem = new Mensagem();
+		String sql = "SELECT * FROM mensagens WHERE Id_mensagem="+id;
+		String sql2 = "SELECT * FROM tag WHERE mensagem_id="+id;
+		PreparedStatement stmt = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs = null;
+		ResultSet rs2 = null;
+		
+		try {
+			stmt = connection.prepareStatement(sql);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			stmt2 = connection.prepareStatement(sql2);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			rs = stmt.executeQuery();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			rs2 = stmt2.executeQuery();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		mensagem.setId(id);
+		try {
+			mensagem.setMens(rs.getString("mensagem"));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		List<String> tags = new ArrayList<String>();
+		List<Integer> idtags = new ArrayList<Integer>();
+		try {
+			while (rs2.next()) {
+				tags.add(rs2.getString("tags"));
+				idtags.add(rs2.getInt("mensagem_id"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		mensagem.setTag(tags);
+		mensagem.setTag_id(idtags);		
+		return mensagem;
+		
 	}
 }

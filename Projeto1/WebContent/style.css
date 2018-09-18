@@ -65,11 +65,12 @@ h1 {
 	align-self: center;
 	margin-left: 1%;
 	background-color: lightgrey;
+	align-content: center;
+	text-align: center;
 }
 #buscaBar input {
 	position:relative;
-	width: 99%;
-	align-content: center;
+	width: 99.5%;
 }
 
 
