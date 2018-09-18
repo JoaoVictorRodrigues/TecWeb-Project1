@@ -49,18 +49,18 @@
 			for (Mensagem mensagem : messages) {
 				String asd = "";
 				for (String str : mensagem.getTag()) {
-					asd += str + "\n";
+					asd += str + " ";
 				}
 				String msgstr = mensagem.getMens();
 				int id = mensagem.getId();
-								
-		%>
+				String msg = mensagem.getMens();
+				%>
 		<tr>
 			<td><%=mensagem.getId()%></td>
 			<td><%=mensagem.getMens()%></td>
 			<td><%=asd%></td>
-			<td><button onClick="onEdit(<%=id%>)">Edit</button></td>
-			<td><button onclick="onDel(<%=mensagem.getId() %>)">Delete</button></td>
+			<td><button onClick="onEditID(<%=id%>);onEditMsg('<%=msg%>' );onEditTag('<%=asd %>');">Edit</button></td>
+			<td><button onclick="onDel(<%=mensagem.getId() %>);">Delete</button></td>
 		</tr>
 		<%
 			}
@@ -73,27 +73,23 @@
 
 			<form action=" ${pageContext.request.contextPath}/altera" method="POST">
 				<table>
-
 					<tr>
 						<td>Tem certeza que deseja alterar essa nota?</td>
 					</tr>
 					<tr>
-
 						<td>Notas:</td>
-						<td><input type="text" name="msgEdit" id="msgEdit">
-						<input type="hidden" name="idAlterar" id="idAlterar"></td>
+						<td><input type="hidden" name="idAlterar" id="idAlterar">
+						<textarea type="text" name="msgEdit" id="msgEdit" ></textarea>
+						</td>
 					</tr>
 					<tr>
 						<td>Tags:</td>
-						<td><input type="text" name="tagEdit" id="tagEdit"></td>
+						<td><textarea type="text" name="tagEdit" id="tagEdit"></textarea></td>
 					</tr>
 					<tr>
 						<td><input type="submit"></td>
-
 					</tr>
-
 				</table>
-
 			</form>
 			<table>
 				<tr>
@@ -124,7 +120,7 @@
 	</div>
 
 
-
+	
 
 
 </body>
