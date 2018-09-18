@@ -42,13 +42,14 @@ public class BuscaServlet extends HttpServlet {
 		DAO dao = new DAO();
 		String tagBusca = request.getParameter("tagBusca");
 		if(tagBusca.equals("")){
-			request.getRequestDispatcher("Testejsp.jsp").forward(request, response);
+			response.sendRedirect("Testejsp.jsp");
+			
 		}
 		else {
 			List<Integer> listaId = dao.getBuscaId(tagBusca);
 			List<Integer> listaZero = new ArrayList<>();
 			if(listaId.equals(listaZero)) {
-				request.getRequestDispatcher("Testejsp.jsp").forward(request, response);
+				response.sendRedirect("Testejsp.jsp");
 			}
 			else {
 		
