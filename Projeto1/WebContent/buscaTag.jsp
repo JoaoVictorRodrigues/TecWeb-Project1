@@ -38,13 +38,14 @@
 		</form>
 	<table border="1" class="listaNotas">
 		<tr>
-			<td class="iddoTagBar"><h2>Id</h2></td>
 			<td class="noteTagbar"><h2>Notas</h2></td>
 			<td class="tagsTagbar"><h2>Tags</h2></td>
 			<td class="editTagbar"><h2>Editar</h2></td>
 			<td class="editTagbar"><h2>Deletar</h2></td>
 		</tr>
 		<%	DAO dao = new DAO();
+			int firstID = 0;
+			boolean isIs = true;
 			List<Integer> listaId = (List<Integer>) request.getAttribute("result");
 			List<Mensagem> messages = dao.getListaBusca(listaId);
 			for (Mensagem mensagem : messages) {
@@ -54,10 +55,12 @@
 				}
 				String msgstr = mensagem.getMens();
 				int id = mensagem.getId();
-								
+				if (isIs) {
+					firstID = mensagem.getId()-1;
+					isIs = false;
+				}			
 		%>
 		<tr>
-			<td><%=mensagem.getId()%></td>
 			<td><%=mensagem.getMens()%></td>
 			<td><%=asd%></td>
 			<td><button onClick="onEditID(<%=mensagem.getId()%>);onEditMsg('<%=mensagem.getMens()%>');onEditTag('<%=asd%>');">Edit</button></td>
