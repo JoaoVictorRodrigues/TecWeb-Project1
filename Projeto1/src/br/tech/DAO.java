@@ -23,7 +23,7 @@ public class DAO {
 
 		try {
 			connection = DriverManager.getConnection(
-					"jdbc:mysql://localhost/projeto1?useTimezone=true&serverTimezone=UTC", "root", "googleex");
+					"jdbc:mysql://google/projeto1?cloudSqlInstance=projeto-inscatcia&socketFactory=com.google.sql.mysql.SocketFactory&user=root&password=h'pintadinha&useSSl=false");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
