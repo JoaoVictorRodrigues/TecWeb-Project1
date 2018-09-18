@@ -124,7 +124,6 @@ public class DAO {
 		try {
 			while (rs.next()) {
 				nextId = rs.getInt("Id_mensagem") + 1;
-				System.out.println("LastId: " + nextId);
 			}
 		} catch (SQLException e2) {
 			// TODO Auto-generated catch block
@@ -155,7 +154,6 @@ public class DAO {
 			e.printStackTrace();
 		}
 		for (String str : mens.getTag()) {
-			System.out.println("Passou por: " + str);
 			try {
 				stmt2.setInt(1, nextId);
 			} catch (SQLException e) {

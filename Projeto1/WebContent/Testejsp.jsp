@@ -45,6 +45,8 @@
 			<td class="editTagbar"><h2>Deletar</h2></td>
 		</tr>
 		<%	DAO dao = new DAO();
+			int firstID = 0;
+			boolean isIs = true;
 			List<Mensagem> messages = dao.getLista();
 			for (Mensagem mensagem : messages) {
 				String asd = "";
@@ -54,9 +56,13 @@
 				String msgstr = mensagem.getMens();
 				int id = mensagem.getId();
 				String msg = mensagem.getMens();
+				if (isIs) {
+					firstID = mensagem.getId()-1;
+					isIs = false;
+				}
 				%>
 		<tr>
-			<td><%=mensagem.getId()%></td>
+			<td><%=mensagem.getId()-firstID%></td>
 			<td><%=mensagem.getMens()%></td>
 			<td><%=asd%></td>
 			<td><button onClick="onEditID(<%=id%>);onEditMsg('<%=msg%>' );onEditTag('<%=asd %>');">Edit</button></td>
